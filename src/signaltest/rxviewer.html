@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .tree-container { font-family: 'Segoe UI', monospace; padding: 20px; font-size: 13px; color: #333; }
+    
+    /* Level tracking lines */
+    .tree-level { 
+      margin-left: 10px; 
+      padding-left: 10px;
+      border-left: 1px solid #ddd; /* The vertical line */
+      display: block; 
+    }
+
+    /* Class to hide folded content */
+    .collapsed { display: none !important; }
+
+    .tree-row { display: flex; align-items: center; padding: 3px 8px; border-radius: 4px; position: relative; }
+    .tree-row:hover { background-color: #f0f7ff; }
+
+    /* Fold Toggle Arrow */
+    .toggle {
+      cursor: pointer;
+      width: 14px;
+      height: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 4px;
+      color: #666;
+      transition: transform 0.2s;
+      user-select: none;
+    }
+    .toggle.rotated { transform: rotate(-90deg); }
+
+    .key { color: #881391; font-weight: bold; margin-right: 5px; }
+    .value { color: #1a1aa6; }
+    
+    .controls { margin-left: 15px; display: flex; gap: 4px; opacity: 0; }
+    .tree-row:hover .controls { opacity: 1; }
+    
+    .icon { cursor: pointer; font-size: 11px; padding: 1px 5px; border: 1px solid #ccc; background: #fff; border-radius: 3px; }
+    .icon:hover { background: #e2e2e2; }
+    .editable { background: white; border: 1px solid #007bff; outline: none; padding: 0 4px; }
+
+    #status-bar {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      background: rgba(255,255,255,0.9);
+      padding: 4px 8px;
+      border-radius: 20px;
+      border: 1px solid #ddd;
+      z-index: 100;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #ff4d4d; transition: background 0.3s; }
+    .dot.connected { background: #2ecc71; box-shadow: 0 0 5px #2ecc71; }    
+  </style>
+</head>
+<body>
+
+<div id="status-bar">
+    <div id="status-dot" class="dot"></div>
+    <span id="status-text">Disconnected</span>
+    <button id="reloadBtn" style="margin-left:5px">Reload</button>
+</div>
+<div id="editor" class="tree-container"></div>
+
+<script type="module">
+  let jsonData = window.parent.state || {};
+  let isConnected = false;
+
+  const dot = document.getElementById('status-dot');
+  const statusText = document.getElementById('status-text');
+  /**
+   * The 'Subscription Method' that the Container effectively calls
+   */
+  function onStateUpdate(newData) {
+    jsonData = newData;
+    refresh();
+  }
+
+  function attemptSubscription() {
+    if (isConnected) return;
+    window.parent.postMessage({ type: 'SUBSCRIBE_ME' }, "*");
+    setTimeout(attemptSubscription, 500);
+  }
+
+  window.addEventListener("message", (event) => {
+    if (event.data.type === 'STATE_UPDATED') {
+      if (!isConnected) {
+        isConnected = true; // Stop polling
+        dot.classList.add('connected');
+        statusText.textContent = "Live";
+      }
+      onStateUpdate(event.data.payload);
+    }
+  });
+
+  // Start the polling process
+  attemptSubscription();
+
+  document.getElementById('reloadBtn').onclick = () => reload();
+
+  function refresh() {
+    renderTree(jsonData, document.getElementById('editor'));
+  }
+
+  function reload() {
+    if (window.parent.state) {    
+      jsonData = JSON.parse(JSON.stringify(window.parent.state));
+      refresh();
+    }
+  }
+
+  // Helper: Create the toggle arrow
+  function createToggle(onToggle) {
+    const span = document.createElement('span');
+    span.className = 'toggle';
+    span.textContent = '▼';
+    span.onclick = (e) => {
+      span.classList.toggle('rotated');
+      onToggle();
+    };
+    return span;
+  }
+
+  function createDeepTemplate(source) {
+    if (Array.isArray(source)) {
+      return source.length > 0 ? [createDeepTemplate(source[0])] : [];
+    }
+    if (typeof source === 'object' && source !== null) {
+      let template = {};
+      for (let key in source) { template[key] = createDeepTemplate(source[key]); }
+      return template;
+    }
+    return typeof source === 'number' ? 0 : typeof source === 'boolean' ? false : "New Value"; 
+  }
+
+  function renderTree(obj, container) {
+    container.innerHTML = '';
+    if (!obj) return;    
+    for (let key in obj) {
+      const value = obj[key];
+      const row = document.createElement('div');
+      row.className = 'tree-row';
+
+      const isCollapsible = typeof value === 'object' && value !== null;
+      
+      // Add toggle arrow if it's an object/array
+      if (isCollapsible) {
+        const branchContainer = document.createElement('div');
+        branchContainer.className = 'tree-level';
+        
+        const toggle = createToggle(() => {
+          branchContainer.classList.toggle('collapsed');
+        });
+        row.appendChild(toggle);
+        
+        const keySpan = document.createElement('span');
+        keySpan.className = 'key';
+        keySpan.textContent = Array.isArray(obj) ? `[${key}]:` : `${key}:`;
+        row.appendChild(keySpan);
+        
+        container.appendChild(row);
+        addControls(row, obj, key, true);
+        
+        renderTree(value, branchContainer);
+        container.appendChild(branchContainer);
+      } else {
+        // Spacer for rows without toggles to keep them aligned
+        const spacer = document.createElement('span');
+        spacer.style.width = '18px'; 
+        row.appendChild(spacer);
+
+        const keySpan = document.createElement('span');
+        keySpan.className = 'key';
+        keySpan.textContent = Array.isArray(obj) ? `[${key}]:` : `${key}:`;
+        row.appendChild(keySpan);
+
+        const valSpan = document.createElement('span');
+        valSpan.className = 'value';
+        valSpan.textContent = `"${value}"`;
+        row.appendChild(valSpan);
+        
+        container.appendChild(row);
+        addControls(row, obj, key, false);
+      }
+    }
+  }
+
+  function addControls(row, parentObj, key, isObject) {
+    const controls = document.createElement('div');
+    controls.className = 'controls';
+
+    if (!isObject) {
+      controls.appendChild(createIcon('✎', () => toggleEdit(row, parentObj, key)));
+    }
+    
+    controls.appendChild(createIcon('+', () => {
+      const target = parentObj[key];
+      if (Array.isArray(target)) {
+        target.push(target.length > 0 ? createDeepTemplate(target[0]) : "New Item");
+      } else if (typeof target === 'object' && target !== null) {
+        const newKey = prompt("Enter property name:");
+        if (newKey) target[newKey] = "value";
+      }
+      refresh();
+    }));
+    
+    controls.appendChild(createIcon('×', () => {
+      Array.isArray(parentObj) ? parentObj.splice(key, 1) : delete parentObj[key];
+      refresh();
+    }));
+
+    row.appendChild(controls);
+  }
+
+  function toggleEdit(row, parentObj, key) {
+    const valSpan = row.querySelector('.value');
+    valSpan.contentEditable = true;
+    valSpan.classList.add('editable');
+    valSpan.focus();
+    valSpan.onblur = () => {
+      parentObj[key] = valSpan.textContent.replace(/"/g, '');
+      valSpan.contentEditable = false;
+      valSpan.classList.remove('editable');
+    };
+  }
+
+  function createIcon(text, onclick) {
+    const el = document.createElement('span');
+    el.className = 'icon';
+    el.textContent = text;
+    el.onclick = (e) => { e.stopPropagation(); onclick(); };
+    return el;
+  }
+
+  refresh();
+</script>
+</body>
+</html>

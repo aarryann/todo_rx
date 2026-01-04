@@ -1,0 +1,18 @@
+[
+  {
+    "id": "pipeline_0",
+    "pipeline": "addTodo($el)"
+  },
+  {
+    "id": "pipeline_1",
+    "pipeline": "searchTodos($el, $event)"
+  },
+  {
+    "id": "pipeline_2",
+    "pipeline": "deleteItem($el)"
+  },
+  {
+    "id": "pipeline_3",
+    "pipeline": "deleteItem($el)"
+  }
+]

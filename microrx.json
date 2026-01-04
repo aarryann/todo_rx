@@ -1,0 +1,35 @@
+{
+  "pages": [
+    "board/board.html"
+  ],
+  "ignore": [
+    "index.html",
+    "board/index.html",
+    "board/profile.html",
+    "todo/todo.html"
+  ],
+  "assets": [
+    { "dist": [ "server.mjs", "node_modules/microrx/dist/csr/microrx.js" ] },
+    { "dist/data": [ "src/data/todos.json", "src/data/board.json" ] }
+  ],
+  "outDir": "dist",
+  "srcDir": "src",
+  "staticLoaders": {
+    "loadTodos": "./src/data/todos.json"
+  },
+  "components": {
+    "index_html": {},
+    "board_index_html": {},
+    "board_board_html": {
+      "Board": "./src/components/Board.rx.html",
+      "Column": "./src/components/Column.rx.html",
+      "Card": "./src/components/Card.rx.html",
+      "Tag": "./src/components/Tag.rx.html"
+    },
+    "board_profile_html": {},
+    "todo_todo_html": {
+      "TodoList": "./src/components/TodoList.rx.html",
+      "TodoItem": "./src/components/TodoItem.rx.html"
+    }
+  }
+}

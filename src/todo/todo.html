@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-abc123'; style-src 'self'; img-src 'self'; connect-src 'self';">
+    <title>Microrx Todo Example</title>
+    <script lang="javascript" src="/todo-data.js"></script>
+  </head>
+  <body>
+    <h1>Todo list</h1>
+
+  <div>
+    <input id="newTodo" placeholder="Add todo"/>
+    <button id="btnAdd" rx:click="addTodo($el)">Add</button>
+
+    <input id="search" placeholder="Search todos"/>
+    <button id="btnSearch" rx:click="searchTodos($el, $event)">Search</button>
+  </div>
+  <TodoList rx:src="src/components/todoList.rx.html" id="todo-list"/>
+</body>
+</html>

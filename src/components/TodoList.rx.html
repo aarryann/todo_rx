@@ -1,0 +1,11 @@
+<section rx:staticload="todos=getToDos()">
+
+  <h2>Todo List</h2>
+
+  <ul>
+    <li rx-for="todo in todos key by todo.id">
+      <TodoItem rx-text="todo.title" rx-id="{'id_'}todo.id" rx-done="todo.done"  rx:src="src/components/todoItem.rx.html"/>
+    </li>
+  </ul>
+
+</section>

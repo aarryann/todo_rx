@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <!--meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-abc123'; style-src 'self'; img-src 'self'; connect-src 'self';"-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Board</title>
+    <link rel="stylesheet" href="/uno.css">
+  </head>
+  <body class="font-[Arial] bg-gray-100">
+    <h1 class="text-3xl font-bold px-4 text-slate-800">{{board.title}}</h1>
+
+    <Board class="block" rx:src="./src/components/Board.rx.html"></Board>
+  </body>
+</html>
