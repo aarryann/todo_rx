@@ -10,6 +10,7 @@
     "build": "pnpm rx:build && pnpm uno:build",
     "serve": "node ./dist/server.mjs",
     "dev": "pnpm build && pnpm serve",
+    "start": "pnpm build && pnpm serve",
     "signaltest:build": "node build.mjs && pnpm serve"
   },
   "keywords": [],

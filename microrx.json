@@ -1,6 +1,8 @@
 {
   "pages": [
-    "board/board.html"
+    "board/board.html",
+    "signaltest",
+    "reactivity"
   ],
   "ignore": [
     "index.html",

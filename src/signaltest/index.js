@@ -1,6 +1,6 @@
-import { effect } from "./reactivity/effect.js"
-import { jsonData, notifyAll } from "./reactivity/state.js"
-import { signalize } from "./reactivity/signalize.js"
+import { effect } from "../reactivity/effect.js"
+import { jsonData, notifyAll } from "../reactivity/state.js"
+import { signalize } from "../reactivity/signalize.js"
 
 const state = signalize(jsonData);
 window.state = state;
