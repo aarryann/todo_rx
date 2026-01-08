@@ -1,6 +1,8 @@
 import { signal } from "./signal.js"
-import { reactive } from "./reactive.js"
+import { reactive, printTargetMap } from "./reactive.js"
 import { signalArray } from "./signalArray.js"
+
+export { printTargetMap };
 
 export function signalize(value) {
   // primitives → signal

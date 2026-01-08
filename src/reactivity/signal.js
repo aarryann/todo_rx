@@ -1,4 +1,4 @@
-import { currentEffect } from "./effect.js"
+import { activeEffect } from "./effect.js"
 
 export function signal(initial) {
   let value = initial
@@ -6,7 +6,7 @@ export function signal(initial) {
 
   return {
     get value() {
-      if (currentEffect) subs.add(currentEffect)
+      if (activeEffect) subs.add(activeEffect)
       return value
     },
     set value(v) {

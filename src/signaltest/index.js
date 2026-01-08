@@ -1,18 +1,25 @@
 import { effect } from "../reactivity/effect.js"
 import { jsonData, notifyAll } from "../reactivity/state.js"
-import { signalize } from "../reactivity/signalize.js"
+import { signalize, printTargetMap } from "../reactivity/signalize.js"
 
 const state = signalize(jsonData);
 window.state = state;
 
 
 // Track board title
+//effect(state.boards.title, (value) => {
+//  document.getElementById("title").textContent = value
+//})
+
 effect(() => {
-  document.getElementById("title").textContent =
-    state.boards.title
+  document.getElementById("title").textContent = state.boards.title
 })
 
 // Track first card tag
+//effect(state.boards.columns.value[0].cards.value[0].tag, (value) => {
+//  document.getElementById("tag").textContent = value
+//})
+
 effect(() => {
   document.getElementById("tag").textContent = state.boards.columns.value[0].cards.value[0].tag
 })
@@ -20,7 +27,10 @@ effect(() => {
 // Mutations
 document.getElementById("changeTag").onclick = () => {
   state.boards.columns.value[0].cards.value[0].tag = "medium-priority"
-  notifyAll(state);
+  //console.log(targetMap);
+  printTargetMap()
+
+  //notifyAll(state);
 }
 
 document.getElementById("addCard").onclick = () => {
