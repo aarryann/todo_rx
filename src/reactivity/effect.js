@@ -21,26 +21,30 @@ export function effect(fnWatched, opts = {}) {
   let init = true;
 
   const fn = (values = null) => {
-    fnWatched(values);
-    notifyAll(stateToNotify.value);
+    if(watches && values.length > 0) activeEffect.value = null; // Watched mode
+
+    if (!(lazy && init)) {
+      fnWatched(values);
+      notifyAll(stateToNotify.value);
+    }
+
+    if(!watches) activeEffect.value = null; // Auto inference mode
+    init = false;
   }
 
   const wrapped = () => {
     cleanup(wrapped);
     activeEffect.value = wrapped;
-
     let values = [];
-
     // MODE 1: auto inference
     if (!watches) {
-      if (!(lazy && init)) fn();
+      fn();
     }
 
     // MODE 2: getter watches
     else if (typeof watches[0] === "function") {
       values = watches.map(getter => getter());
-      activeEffect.value = null;
-      if (!(lazy && init)) fn(values);
+      fn(values);
     }
 
     // MODE 3: tuple watches
@@ -65,11 +69,8 @@ export function effect(fnWatched, opts = {}) {
 
         return stateObj[key];
       })
-      activeEffect.value = null
-      if (!(lazy && init)) fn(values);
+      fn(values);
     }
-    activeEffect.value = null
-    init = false;
   }
   wrapped.trackers = []
   wrapped.scheduler = scheduler
