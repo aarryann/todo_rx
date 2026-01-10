@@ -1,106 +1,79 @@
-import { targetMap } from "./reactive.js";
-
-export let activeEffect = null
-
-export function effect1(source, run, {defer = true} = {}) {
-  let init = true;
-  const runner = (...args) => {
-    console.log(`Registering effect ${source} = ${init} = ${defer}`);
-    activeEffect = runner;
-    const value = source; // auto-track
-    activeEffect = null;
-    if (!(defer && init)) {
-      run(...args, value);
-    }
-    init = false;
-  };
-
-  runner();
-}
-
-export function effect2(run) {
-  console.log(`Registering effect 2`);
-  activeEffect = run;
-  run();
-  activeEffect = null;
-
-}
+import { notifyAll, stateToNotify } from "./notifyWindow.js";
+import { activeEffect, effectTracker } from "./reactive.js";
 
 export function cleanup(effectFn) {
-  if (!effectFn.deps) return;
-  for (const dep of effectFn.deps) {
-    dep.delete(effectFn);
+  if (!effectFn.trackers) return;
+  for (const tracker of effectFn.trackers) {
+    tracker.delete(effectFn);
   }
-  effectFn.deps.length = 0;
+  effectFn.trackers.length = 0;
 }
 
 /**
  * 
  * Mode 1: Auto inference - effect(fn, opts) = effect(() => { lbl.textContent = state.user }, {})
- * Mode 2: Optimized with getters - effect(fn, opts) = effect(([tag, status])=>{lbl.textContent = `The status of ${tag} is ${status}`}, {defer: true, deps:[() => card.tag, () => card.status]})
- * Mode 3: Optimized with value tuples - effect(fn, opts) = effect(([tag, status])=>{lbl.textContent = `The status of ${tag} is ${status}`}, {defer: true, deps:[[card, "tag"], [card, "status"]]})
+ * Mode 2: Optimized with getters - effect(fn, opts) = effect(([tag, status])=>{lbl.textContent = `The status of ${tag} is ${status}`}, {defer: true, watches:[() => card.tag, () => card.status]})
+ * Mode 3: Optimized with value tuples - effect(fn, opts) = effect(([tag, status])=>{lbl.textContent = `The status of ${tag} is ${status}`}, {defer: true, watches:[[card, "tag"], [card, "status"]]})
  * 
  */
-export function effect(fn, opts = {}) {
-  const {
-    deps = null,
-    lazy = false,
-    scheduler = null
-  } = opts;
+export function effect(fnWatched, opts = {}) {
+  const { watches = null, lazy = true, scheduler = null } = opts;
   let init = true;
 
-  const effectFn = () => {
-    cleanup(effectFn);
-    activeEffect = effectFn;
+  const fn = (values = null) => {
+    fnWatched(values);
+    notifyAll(stateToNotify.value);
+  }
+
+  const wrapped = () => {
+    cleanup(wrapped);
+    activeEffect.value = wrapped;
 
     let values = [];
 
     // MODE 1: auto inference
-    if (!deps) {
+    if (!watches) {
       if (!(lazy && init)) fn();
     }
 
-    // MODE 2: getter deps
-    else if (typeof deps[0] === "function") {
-      values = deps.map(getter => getter());
-      activeEffect = null;
+    // MODE 2: getter watches
+    else if (typeof watches[0] === "function") {
+      values = watches.map(getter => getter());
+      activeEffect.value = null;
       if (!(lazy && init)) fn(values);
     }
 
-    // MODE 3: tuple deps
-    else if (Array.isArray(deps[0])) {
-      values = deps.map(([target, key]) => {
-        let depsMap = targetMap.get(target);
-        if (!depsMap) {
-          depsMap = new Map();
-          targetMap.set(target, depsMap);
+    // MODE 3: tuple watches
+    else if (Array.isArray(watches[0])) {
+      values = watches.map(([stateObj, key]) => {
+        let keyEffectsMap = effectTracker.get(stateObj);
+        if (!keyEffectsMap) {
+          keyEffectsMap = new Map();
+          effectTracker.set(stateObj, keyEffectsMap);
         }
 
-        let dep = depsMap.get(key);
-        if (!dep) {
-          dep = new Set();
-          depsMap.set(key, dep);
+        let keyEffects = keyEffectsMap.get(key);
+        if (!keyEffects) {
+          keyEffects = new Set();
+          keyEffectsMap.set(key, keyEffects);
         }
 
-        if (!dep.has(effectFn)) {
-          dep.add(effectFn);
-          effectFn.deps.push(dep);
+        if (!keyEffects.has(wrapped)) {
+          keyEffects.add(wrapped);
+          wrapped.trackers.push(keyEffects);
         }
 
-        return target[key];
+        return stateObj[key];
       })
-      activeEffect = null
+      activeEffect.value = null
       if (!(lazy && init)) fn(values);
     }
-    activeEffect = null
+    activeEffect.value = null
     init = false;
   }
-  effectFn.deps = []
-  effectFn.scheduler = scheduler
+  wrapped.trackers = []
+  wrapped.scheduler = scheduler
+  wrapped()
 
-  if (!lazy) {
-    effectFn()
-  }
-
-  return effectFn  
+  return wrapped  
 }

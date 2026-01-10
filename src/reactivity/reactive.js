@@ -1,38 +1,43 @@
-import { activeEffect } from "./effect.js"
-
-const proxyCache = new WeakMap()
-export const targetMap = new WeakMap();
+let currentEffect = null;
+export const effectTracker = new WeakMap();
 export const debugKeys = new Set();
+const proxyCache = new WeakMap()
 const IS_REACTIVE = Symbol("isReactive")
 
-function track(target, key) {
-  if (!activeEffect) return;
-
-  debugKeys.add(target);
-  //console.log("track →", target, key);
-  let depsMap = targetMap.get(target);
-  if (!depsMap) {
-    depsMap = new Map();
-    targetMap.set(target, depsMap);
-  }
-
-  let dep = depsMap.get(key);
-  if (!dep) {
-    dep = new Set();
-    depsMap.set(key, dep);
-  }
-  if (!dep.has(activeEffect)) {
-    dep.add(activeEffect)
-    activeEffect.deps.push(dep) 
+export const activeEffect = {
+  get value () {
+    return currentEffect;
+  },
+  set value (effect) {
+    currentEffect = effect;
   }
 }
 
-function trigger(target, key) {
-  const depsMap = targetMap.get(target);
-  if (!depsMap) return;
+export function track(stateObj, key) {
+  if (!activeEffect.value) return;
 
-  //console.log("trigger →", target, key);
-  const effects = depsMap.get(key);
+  debugKeys.add(stateObj);
+  let keyEffectsMap = effectTracker.get(stateObj);
+  if (!keyEffectsMap) {
+    keyEffectsMap = new Map();
+    effectTracker.set(stateObj, keyEffectsMap);
+  }
+
+  let keyEffects = keyEffectsMap.get(key);
+  if (!keyEffects) {
+    keyEffects = new Set();
+    keyEffectsMap.set(key, keyEffects);
+  }
+  if (!keyEffects.has(activeEffect.value)) {
+    keyEffects.add(activeEffect.value)
+  }
+}
+
+export function trigger(stateObj, key) {
+  const keyEffectsMap = effectTracker.get(stateObj);
+  if (!keyEffectsMap) return;
+
+  const effects = keyEffectsMap.get(key);
   if (effects) {
     effects.forEach(effect => {
       if (effect.scheduler) {
@@ -43,7 +48,6 @@ function trigger(target, key) {
     })
   }
 }
-
 
 export function reactive(obj) {
   if (typeof obj !== "object" || obj === null) return obj;
@@ -66,9 +70,7 @@ export function reactive(obj) {
     set(target, key, value, receiver) {
       const old = target[key];
       const result = Reflect.set(target, key, value, receiver);
-      if (old !== value) {
-        trigger(target, key);
-      }
+      if (old !== value) trigger(target, key);
       return result
     },
     deleteProperty(target, key) {
@@ -83,16 +85,15 @@ export function reactive(obj) {
   return proxy
 }
 
-export function printTargetMap() {
-  console.log("========== TargetMap ==========")
+export function printTrackedEffects() {
+  console.log("========== TrackedEffects ==========")
 
-  debugKeys.forEach(target => {
-    const depsMap = targetMap.get(target);
-    if (!depsMap) return;
+  debugKeys.forEach(stateObj => {
+    const keyEffectsMap = effectTracker.get(stateObj);
+    if (!keyEffectsMap) return;
 
-    console.log("Target:", target);
-
-    depsMap.forEach((effects, key) => {
+    console.log("Target:", stateObj);
+    keyEffectsMap.forEach((effects, key) => {
       console.log(`  Property: "${key.toString()}", Effects count: ${effects.size}`)
       effects.forEach((effectFn, idx) => {
         console.log(`    [${idx}] Effect: ${effectFn.name || "anonymous function"}`)

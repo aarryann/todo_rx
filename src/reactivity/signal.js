@@ -1,19 +1,20 @@
-import { activeEffect } from "./effect.js"
+import { track, trigger } from "./reactive.js";
 
-export function signal(initial) {
-  let value = initial
-  const subs = new Set()
+export function signal(initialValue) {
+  let _value = initialValue;
 
-  return {
+  const s = {
     get value() {
-      if (activeEffect) subs.add(activeEffect)
-      return value
+      track(s, "value");  // track this signal for effects
+      return _value;
     },
-    set value(v) {
-      if (v !== value) {
-        value = v
-        subs.forEach(fn => fn())
+    set value(newValue) {
+      if (_value !== newValue) {
+        _value = newValue;
+        trigger(s, "value");  // only triggers effects subscribed to this signal
       }
     }
-  }
+  };
+
+  return s;
 }
