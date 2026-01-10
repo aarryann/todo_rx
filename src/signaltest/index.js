@@ -1,8 +1,22 @@
-import { jsonData } from "../reactivity/state.js"
 import { effect, printTrackedEffects, signalize, stateToNotify } from "../reactivity/signalize.js"
 
+const jsonData = {
+  user: "Jack",
+  boards: {
+    title: "Trello Duplicate",
+    columns: [
+      {
+        id: "col-1",
+        name: "Todo",
+        cards: [
+          { id: "card-1", text: "Buy milk", tag: "low" }
+        ]
+      }
+    ]
+  }
+};
+
 const state = signalize(jsonData);
-//window.state = state;
 stateToNotify.value = state;
 
 effect(([value]) => {
