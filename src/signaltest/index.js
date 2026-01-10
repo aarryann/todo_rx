@@ -2,7 +2,7 @@ import { jsonData } from "../reactivity/state.js"
 import { effect, printTrackedEffects, signalize, stateToNotify } from "../reactivity/signalize.js"
 
 const state = signalize(jsonData);
-window.state = state;
+//window.state = state;
 stateToNotify.value = state;
 
 effect(([value]) => {
@@ -17,14 +17,10 @@ effect(([value]) => {
 // Mutations
 document.getElementById("newTitle").onchange = () => {
   state.boards.title = document.getElementById("newTitle").value;
-
-  //notifyAll(state);
 }
 
 document.getElementById("newTag").onchange = () => {
   state.boards.columns.value[0].cards.value[0].tag = document.getElementById("newTag").value;
-
-  //notifyAll(state);
 }
 
 document.getElementById("addCard").onclick = () => {
@@ -33,5 +29,4 @@ document.getElementById("addCard").onclick = () => {
     text: "New task",
     tag: "high"
   })
-  //notifyAll(state);
 }
