@@ -17,6 +17,7 @@ const jsonData = {
 };
 
 const state = signalize(jsonData);
+window.state = state;
 stateToNotify.value = state;
 
 effect(([value]) => {
@@ -29,12 +30,12 @@ effect(([value]) => {
 }, {watches:[[state.boards.columns.value[0].cards.value[0], "tag"]]})
 
 // Mutations
-document.getElementById("newTitle").onchange = () => {
-  state.boards.title = document.getElementById("newTitle").value;
+document.getElementById("newTitle").oninput = (e) => {
+  state.boards.title = e.target.value;
 }
 
-document.getElementById("newTag").onchange = () => {
-  state.boards.columns.value[0].cards.value[0].tag = document.getElementById("newTag").value;
+document.getElementById("newTag").oninput = (e) => {
+  state.boards.columns.value[0].cards.value[0].tag = e.target.value;
 }
 
 document.getElementById("addCard").onclick = () => {
