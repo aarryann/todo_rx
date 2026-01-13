@@ -1,4 +1,4 @@
-import { signalize } from "./reactivity/signalize.js"
+import { signalize } from "/microrx.js"
 
 export const state = {
   user: "Jack",

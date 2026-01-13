@@ -1,9 +1,9 @@
-import { effect, printTrackedEffects, signalize, stateToNotify } from "../reactivity/signalize.js"
+import { effect, printTrackedEffects, signalize, stateToNotify } from "/microrx.js"
 
 const jsonData = {
   user: "Jack",
   boards: {
-    title: "Trello Duplicate",
+    title: "Trello Clone",
     columns: [
       {
         id: "col-1",

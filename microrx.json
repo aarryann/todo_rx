@@ -1,8 +1,7 @@
 {
   "pages": [
     "board/board.html",
-    "signaltest",
-    "reactivity"
+    "signal"
   ],
   "ignore": [
     "index.html",
@@ -11,7 +10,7 @@
     "todo/todo.html"
   ],
   "assets": [
-    { "dist": [ "server.mjs", "node_modules/microrx/dist/csr/microrx.js" ] },
+    { "dist": [ "server.mjs", "node_modules/microrx/dist/csr/microrx.js", "node_modules/microrx/dist/csr/boot.js" ] },
     { "dist/data": [ "src/data/todos.json", "src/data/board.json" ] }
   ],
   "outDir": "dist",
