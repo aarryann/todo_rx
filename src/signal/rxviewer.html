@@ -59,23 +59,267 @@
     }
     .dot { width: 8px; height: 8px; border-radius: 50%; background: #ff4d4d; transition: background 0.3s; }
     .dot.connected { background: #2ecc71; box-shadow: 0 0 5px #2ecc71; }    
-  </style>
+
+    /* Toolbar Containers */
+    .toolbar {
+        height: 28px;
+        background-color: var(--sys-color-sidebar);
+        border-bottom: 1px solid var(--sys-color-divider);
+        display: flex;
+        align-items: center;
+        padding: 0 8px;
+    }
+
+    .toolbar-divider {
+        width: 1px;
+        height: 16px;
+        background-color: var(--sys-color-divider);
+        margin: 0 8px;
+    }
+
+    /* Button Styling */
+    .toolbar-button {
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: 2px;
+        color: #5a5a5a;
+        font-size: 11px;
+        padding: 2px 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        transition: all 0.1s;
+    }
+
+    .toolbar-button:hover {
+        background-color: #e0e0e0;
+    }
+
+    /* Power Mode Active State (DevTools Blue) */
+    .toolbar-button.active {
+        color: #1a73e8;
+        background-color: #e8f0fe;
+    }
+
+    .toolbar-button.active .power-icon {
+        filter: drop-shadow(0 0 2px #1a73e8);
+    }
+
+</style>
 </head>
 <body>
 
-<div id="status-bar">
+<div id="status-bar" class="toolbar">
     <div id="status-dot" class="dot"></div>
     <span id="status-text">Disconnected</span>
-    <button id="reloadBtn" style="margin-left:5px">Reload</button>
+    <div class="toolbar-divider"></div>
+
+    <button id="powerModeBtn" class="toolbar-button" title="Toggle Power Mode (Capture all signal transitions)">
+        <span class="power-icon">⚡</span> Power Mode
+    </button>
+
+    <div class="toolbar-divider"></div>
+    <button id="reloadBtn" class="toolbar-button">
+        <span class="refresh-icon">↻</span> Reload
+    </button>
 </div>
 <div id="editor" class="tree-container"></div>
 
 <script type="module">
+  const seen = new WeakSet();
+  let isPowerMode = false;
   let jsonData = window.parent.state || {};
   let isConnected = false;
-
+  const powerModeBtn = document.getElementById('powerModeBtn');
   const dot = document.getElementById('status-dot');
   const statusText = document.getElementById('status-text');
+
+  document.getElementById('reloadBtn').onclick = () => reload();
+
+  powerModeBtn.addEventListener('click', () => {
+    isPowerMode = !isPowerMode;
+
+    renderTree(jsonData, document.getElementById("tree"));
+    // Toggle the visual class
+    powerModeBtn.classList.toggle('active', isPowerMode);
+    
+    // Optional: Notify the framework that we want "Power Mode" 
+    // (e.g., logging every single micro-change vs just the final state)
+    chrome.devtools.inspectedWindow.eval(`
+        if (window.__MICRORX_DEVTOOLS__) {
+            window.__MICRORX_DEVTOOLS__.setPowerMode(${isPowerMode});
+        }
+    `);
+
+    console.log(`Power Mode: ${isPowerMode ? 'ENABLED' : 'DISABLED'}`);
+  });
+
+  function isSignal(obj) {
+    return obj && (obj.__isSignal || obj.__isSignalArray);
+  }
+
+  function unwrapSignal(obj) {
+    return isSignal(obj) ? obj.value : obj;
+  }
+
+  function unwrapDeep(obj, seen = new WeakSet()) {
+    if (obj && typeof obj === 'object') {
+      if (seen.has(obj)) return obj; // prevent circular recursion
+      seen.add(obj);
+    }
+
+    if (isSignal(obj)) return unwrapDeep(obj.value, seen);
+    if (Array.isArray(obj)) return obj.map(item => unwrapDeep(item, seen));
+    if (obj && typeof obj === 'object') {
+      const res = {};
+      for (const k in obj) {
+        res[k] = unwrapDeep(obj[k], seen);
+      }
+      return res;
+    }
+    return obj;
+  }
+
+  function createToggle(onToggle) {
+    const span = document.createElement('span');
+    span.className = 'toggle';
+    span.textContent = '▼';
+    span.onclick = (e) => {
+      e.stopPropagation();
+      span.classList.toggle('rotated');
+      onToggle();
+    };
+    return span;
+  }
+
+  function createIcon(text, onclick) {
+    const el = document.createElement('span');
+    el.className = 'icon';
+    el.textContent = text;
+    el.onclick = (e) => { e.stopPropagation(); onclick(); };
+    return el;
+  }
+
+  function addControls(row, parentObj, key, isObject) {
+    const controls = document.createElement('div');
+    controls.className = 'controls';
+
+    if (!isObject) {
+      controls.appendChild(createIcon('✎', () => toggleEdit(row, parentObj, key)));
+    }
+
+    controls.appendChild(createIcon('+', () => {
+      const target = parentObj[key];
+      if (Array.isArray(unwrapSignal(target))) {
+        const template = unwrapSignal(target)[0] ? createDeepTemplate(unwrapSignal(target)[0]) : "New Item";
+        unwrapSignal(target).push(template);
+      } else if (typeof target === 'object' && target !== null) {
+        const newKey = prompt("Enter property name:");
+        if (newKey) target[newKey] = "value";
+      }
+      refresh();
+    }));
+
+    controls.appendChild(createIcon('×', () => {
+      const target = parentObj[key];
+      if (Array.isArray(unwrapSignal(parentObj))) {
+        unwrapSignal(parentObj).splice(key, 1);
+      } else {
+        delete parentObj[key];
+      }
+      refresh();
+    }));
+
+    row.appendChild(controls);
+  }
+
+  function toggleEdit(row, parentObj, key) {
+    const valSpan = row.querySelector('.value');
+    valSpan.contentEditable = true;
+    valSpan.classList.add('editable');
+    valSpan.focus();
+    valSpan.onblur = () => {
+      const newValue = valSpan.textContent.replace(/"/g, '');
+      if (isSignal(parentObj[key])) {
+        parentObj[key].value = newValue;
+      } else {
+        parentObj[key] = newValue;
+      }
+      valSpan.contentEditable = false;
+      valSpan.classList.remove('editable');
+    };
+  }
+
+  function createDeepTemplate(source) {
+    if (Array.isArray(source)) return source.length ? [createDeepTemplate(source[0])] : [];
+    if (source && typeof source === 'object') {
+      const template = {};
+      for (let k in source) template[k] = createDeepTemplate(source[k]);
+      return template;
+    }
+    if (typeof source === 'number') return 0;
+    if (typeof source === 'boolean') return false;
+    return "New Value";
+  }
+
+  function renderTree(obj, container) {
+    const unwrappedObj = unwrapSignal(obj);
+    if (seen.has(unwrappedObj)) return;
+    seen.add(unwrappedObj);
+
+    container.innerHTML = '';
+    const source = unwrapDeep(obj);
+
+    for (let key in source) {
+      if (['__owner','__key','__isSignal','__isSignalArray','trackers','scheduler'].includes(key)) continue;
+
+      const raw = source[key];
+      const value = unwrapSignal(raw);
+      const isArray = Array.isArray(value);
+      const isObject = typeof value === 'object' && value !== null;
+
+      const row = document.createElement('div');
+      row.className = 'tree-row';
+
+      let branchContainer = null;
+      if (isObject || isArray) {
+        branchContainer = document.createElement('div');
+        branchContainer.className = 'tree-level';
+        const toggle = createToggle(() => branchContainer.classList.toggle('collapsed'));
+        row.appendChild(toggle);
+      } else {
+        const spacer = document.createElement('span');
+        spacer.style.width = '18px';
+        row.appendChild(spacer);
+      }
+
+      const keySpan = document.createElement('span');
+      keySpan.className = 'key';
+      keySpan.textContent = Array.isArray(obj) ? `[${key}]:` : `${key}:`;
+      row.appendChild(keySpan);
+
+      if (!isObject && !isArray) {
+        const valSpan = document.createElement('span');
+        valSpan.className = 'value';
+        valSpan.textContent = `"${value}"`;
+        row.appendChild(valSpan);
+      }
+
+      container.appendChild(row);
+      addControls(row, obj, key, isObject || isArray);
+
+      if (branchContainer) {
+        renderTree(raw, branchContainer);
+        container.appendChild(branchContainer);
+      }
+    }
+  }
+  // Refresh function
+  function refresh() {
+    renderTree(window.parent.state, document.getElementById('editor'));
+  }
+
   /**
    * The 'Subscription Method' that the Container effectively calls
    */
@@ -101,146 +345,17 @@
     }
   });
 
-  // Start the polling process
-  attemptSubscription();
-
-  document.getElementById('reloadBtn').onclick = () => reload();
-
-  function refresh() {
-    renderTree(jsonData, document.getElementById('editor'));
-  }
-
   function reload() {
     if (window.parent.state) {    
       jsonData = JSON.parse(JSON.stringify(window.parent.state));
       refresh();
     }
-  }
+  }  
 
-  // Helper: Create the toggle arrow
-  function createToggle(onToggle) {
-    const span = document.createElement('span');
-    span.className = 'toggle';
-    span.textContent = '▼';
-    span.onclick = (e) => {
-      span.classList.toggle('rotated');
-      onToggle();
-    };
-    return span;
-  }
-
-  function createDeepTemplate(source) {
-    if (Array.isArray(source)) {
-      return source.length > 0 ? [createDeepTemplate(source[0])] : [];
-    }
-    if (typeof source === 'object' && source !== null) {
-      let template = {};
-      for (let key in source) { template[key] = createDeepTemplate(source[key]); }
-      return template;
-    }
-    return typeof source === 'number' ? 0 : typeof source === 'boolean' ? false : "New Value"; 
-  }
-
-  function renderTree(obj, container) {
-    container.innerHTML = '';
-    if (!obj) return;    
-    for (let key in obj) {
-      const value = obj[key];
-      const row = document.createElement('div');
-      row.className = 'tree-row';
-
-      const isCollapsible = typeof value === 'object' && value !== null;
-      
-      // Add toggle arrow if it's an object/array
-      if (isCollapsible) {
-        const branchContainer = document.createElement('div');
-        branchContainer.className = 'tree-level';
-        
-        const toggle = createToggle(() => {
-          branchContainer.classList.toggle('collapsed');
-        });
-        row.appendChild(toggle);
-        
-        const keySpan = document.createElement('span');
-        keySpan.className = 'key';
-        keySpan.textContent = Array.isArray(obj) ? `[${key}]:` : `${key}:`;
-        row.appendChild(keySpan);
-        
-        container.appendChild(row);
-        addControls(row, obj, key, true);
-        
-        renderTree(value, branchContainer);
-        container.appendChild(branchContainer);
-      } else {
-        // Spacer for rows without toggles to keep them aligned
-        const spacer = document.createElement('span');
-        spacer.style.width = '18px'; 
-        row.appendChild(spacer);
-
-        const keySpan = document.createElement('span');
-        keySpan.className = 'key';
-        keySpan.textContent = Array.isArray(obj) ? `[${key}]:` : `${key}:`;
-        row.appendChild(keySpan);
-
-        const valSpan = document.createElement('span');
-        valSpan.className = 'value';
-        valSpan.textContent = `"${value}"`;
-        row.appendChild(valSpan);
-        
-        container.appendChild(row);
-        addControls(row, obj, key, false);
-      }
-    }
-  }
-
-  function addControls(row, parentObj, key, isObject) {
-    const controls = document.createElement('div');
-    controls.className = 'controls';
-
-    if (!isObject) {
-      controls.appendChild(createIcon('✎', () => toggleEdit(row, parentObj, key)));
-    }
-    
-    controls.appendChild(createIcon('+', () => {
-      const target = parentObj[key];
-      if (Array.isArray(target)) {
-        target.push(target.length > 0 ? createDeepTemplate(target[0]) : "New Item");
-      } else if (typeof target === 'object' && target !== null) {
-        const newKey = prompt("Enter property name:");
-        if (newKey) target[newKey] = "value";
-      }
-      refresh();
-    }));
-    
-    controls.appendChild(createIcon('×', () => {
-      Array.isArray(parentObj) ? parentObj.splice(key, 1) : delete parentObj[key];
-      refresh();
-    }));
-
-    row.appendChild(controls);
-  }
-
-  function toggleEdit(row, parentObj, key) {
-    const valSpan = row.querySelector('.value');
-    valSpan.contentEditable = true;
-    valSpan.classList.add('editable');
-    valSpan.focus();
-    valSpan.onblur = () => {
-      parentObj[key] = valSpan.textContent.replace(/"/g, '');
-      valSpan.contentEditable = false;
-      valSpan.classList.remove('editable');
-    };
-  }
-
-  function createIcon(text, onclick) {
-    const el = document.createElement('span');
-    el.className = 'icon';
-    el.textContent = text;
-    el.onclick = (e) => { e.stopPropagation(); onclick(); };
-    return el;
-  }
-
+  // Start the polling process
+  attemptSubscription();
   refresh();
+
 </script>
 </body>
 </html>
