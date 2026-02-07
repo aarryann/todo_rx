@@ -2,7 +2,7 @@ import { effect, printTrackedEffects, signalize, stateToNotify } from "/microrx.
 
 const jsonData = {
   user: "Jack",
-  boards: {
+  board: {
     title: "Trello Clone",
     columns: [
       {
@@ -22,7 +22,7 @@ stateToNotify.value = state;
 
 effect(([value]) => {
   document.getElementById("title").textContent = value
-}, {watches:[[state.boards, "title"]]})
+}, {watches:[[state.board, "title"]]})
 
 
 effect(([value]) => {

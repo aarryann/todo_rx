@@ -272,7 +272,7 @@
     const source = unwrapDeep(obj);
 
     for (let key in source) {
-      if (['__owner','__key','__isSignal','__isSignalArray','trackers','scheduler'].includes(key)) continue;
+      if (['__owner','__key','__isReactive','__isSignal','__isSignalArray','trackers','scheduler'].includes(key)) continue;
 
       const raw = source[key];
       const value = unwrapSignal(raw);
@@ -296,6 +296,7 @@
 
       const keySpan = document.createElement('span');
       keySpan.className = 'key';
+      keySpan.setAttribute('data-signal', raw.value);
       keySpan.textContent = Array.isArray(obj) ? `[${key}]:` : `${key}:`;
       row.appendChild(keySpan);
 
