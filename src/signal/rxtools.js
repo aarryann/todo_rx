@@ -149,7 +149,6 @@
 
       const keySpan = document.createElement('span');
       keySpan.className = 'key';
-      keySpan.setAttribute('data-signal', raw.value);
       keySpan.textContent = Array.isArray(obj) ? `[${key}]:` : `${key}:`;
       row.appendChild(keySpan);
 
@@ -180,9 +179,7 @@
   export function reload(newData) {
     seen = new WeakSet();
     jsonData = newData;
-    console.log(jsonData.board.title);
     refresh();
-    console.log('State reloaded in RxViewer');
   }
 
   export function attemptSubscription() {
