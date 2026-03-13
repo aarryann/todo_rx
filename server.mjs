@@ -43,8 +43,11 @@ app.get("/signal", (req, res) => {
   res.send(page);
 });
 
+const jiraData = JSON.parse(
+  fs.readFileSync("./dist/jira/data.json", "utf-8")
+);
 app.get("/jira", (req, res) => {
-  const page = renderPage("./dist/jira/index.html", {}, renderOpts);
+  const page = renderPage("./dist/jira/index.html", jiraData, renderOpts);
 
   console.log("Testing jira page rendering:");
   console.log(page);
