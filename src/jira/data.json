@@ -1,12 +1,16 @@
 {
-  "columns": [
-    { "id": "todo", "title": "To Do", "tasks": [
-      { "id": "PROJ-1", "title": "Implement MicroRX signals", "priority": "High", "user": "JD" },
-      { "id": "PROJ-2", "title": "Draft Growth Playbook", "priority": "Medium", "user": "AM" }
-    ]},
-    { "id": "in-progress", "title": "In Progress", "tasks": [
-      { "id": "PROJ-3", "title": "Ollama RAG Configuration", "priority": "High", "user": "SK" }
-    ]},
-    { "id": "done", "title": "Done", "tasks": [] }
-  ]
+  "board": {
+    "id": "PROJ",
+    "title": "Project QuickStrike",
+    "columns": [
+      { "id": "todo", "title": "To Do", "tasks": [
+        { "id": "PROJ-1", "title": "Implement MicroRX signals", "priority": "High", "user": "JD" },
+        { "id": "PROJ-2", "title": "Draft Growth Playbook", "priority": "Medium", "user": "AM" }
+      ]},
+      { "id": "in-progress", "title": "In Progress", "tasks": [
+        { "id": "PROJ-3", "title": "Ollama RAG Configuration", "priority": "High", "user": "SK" }
+      ]},
+      { "id": "done", "title": "Done", "tasks": [] }
+    ]
+  }
 }
