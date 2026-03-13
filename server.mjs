@@ -26,7 +26,7 @@ const jsonData = {
   }
 };
 const boardData = JSON.parse(
-  fs.readFileSync("./dist/data/board.json", "utf-8")
+  fs.readFileSync("./dist/board/data.json", "utf-8")
 );
 
 app.get("/board", (req, res) => {
@@ -39,6 +39,14 @@ app.get("/signal", (req, res) => {
   const page = renderPage("./dist/signal/index.html", boardData, renderOpts);
 
   console.log("Testing signaltest page rendering:");
+  console.log(page);
+  res.send(page);
+});
+
+app.get("/jira", (req, res) => {
+  const page = renderPage("./dist/jira/index.html", {}, renderOpts);
+
+  console.log("Testing jira page rendering:");
   console.log(page);
   res.send(page);
 });

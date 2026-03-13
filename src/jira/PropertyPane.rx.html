@@ -1,0 +1,36 @@
+<div id="property-pane" class="fixed inset-y-0 right-0 w-96 bg-white shadow-2xl border-l border-gray-200 transform translate-x-full transition-transform duration-300 ease-in-out z-50">
+  <div class="h-full flex flex-col p-6">
+    <div class="flex justify-between items-center mb-6">
+      <span class="text-xs font-bold text-gray-500 uppercase tracking-widest" id="pane-task-id">TASK-101</span>
+      <button onclick="closePane()" class="text-gray-400 hover:text-gray-600"><i data-lucide="x"></i></button>
+    </div>
+    
+    <h2 class="text-xl font-semibold mb-4 outline-none focus:ring-2 ring-blue-500 rounded p-1" contenteditable="true" id="pane-task-title">
+      Task Title
+    </h2>
+
+    <div class="space-y-6 overflow-y-auto pr-2 custom-scrollbar">
+      <div>
+        <label class="block text-xs font-bold text-gray-500 mb-2 uppercase">Description</label>
+        <textarea class="w-full border border-gray-200 rounded p-3 text-sm min-h-32 focus:border-blue-500 outline-none" placeholder="Add a description..."></textarea>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-500 mb-2 uppercase">Status</label>
+          <select class="w-full bg-gray-100 border-none rounded p-2 text-sm font-medium">
+            <option>To Do</option>
+            <option>In Progress</option>
+            <option>Done</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-500 mb-2 uppercase">Priority</label>
+          <div class="flex items-center gap-2 bg-gray-100 p-2 rounded text-sm cursor-pointer">
+            <i data-lucide="chevron-up" class="text-red-500 w-4"></i> High
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

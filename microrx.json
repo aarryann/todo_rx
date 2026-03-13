@@ -1,7 +1,8 @@
 {
   "pages": [
     "board/board.html",
-    "signal"
+    "signal",
+    "jira/index.html"
   ],
   "ignore": [
     "index.html",
@@ -11,7 +12,9 @@
   ],
   "assets": [
     { "dist": [ "server.mjs", "node_modules/microrx/dist/csr/microrx.js", "node_modules/microrx/dist/csr/boot.js" ] },
-    { "dist/data": [ "src/data/todos.json", "src/data/board.json" ] }
+    { "dist/data": [ "src/data/todos.json", "src/data/board.json" ] },
+    { "dist/board": [ "src/board/data.json" ] },
+    { "dist/jira": [ "src/jira/data.json" ] }
   ],
   "outDir": "dist",
   "srcDir": "src",
@@ -19,15 +22,18 @@
     "loadTodos": "./src/data/todos.json"
   },
   "components": {
-    "index_html": {},
-    "board_index_html": {},
     "board_board_html": {
-      "Board": "./src/components/Board.rx.html",
-      "Column": "./src/components/Column.rx.html",
-      "Card": "./src/components/Card.rx.html",
-      "Tag": "./src/components/Tag.rx.html"
+      "Board": "./src/board/Board.rx.html",
+      "Column": "./src/board/Column.rx.html",
+      "Card": "./src/board/Card.rx.html",
+      "Tag": "./src/board/Tag.rx.html"
     },
-    "board_profile_html": {},
+    "jira_html": {
+      "Sidebar": "./src/jira/Sidebar.rx.html",
+      "Main": "./src/jira/Main.rx.html",
+      "Header": "./src/jira/Header.rx.html",
+      "PropertyPane": "./src/jira/PropertyPane.rx.html"
+    },
     "todo_todo_html": {
       "TodoList": "./src/components/TodoList.rx.html",
       "TodoItem": "./src/components/TodoItem.rx.html"
