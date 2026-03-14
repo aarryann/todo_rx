@@ -2,6 +2,7 @@
   "board": {
     "id": "PROJ",
     "title": "Project QuickStrike",
+    "name": "Project Velocity",
     "columns": [
       { "id": "todo", "title": "To Do", "tasks": [
         { "id": "PROJ-1", "title": "Implement MicroRX signals", "priority": "High", "user": "JD" },
