@@ -4,14 +4,14 @@
     "title": "Project QuickStrike",
     "name": "Project Velocity",
     "columns": [
-      { "id": "todo", "title": "To Do", "tasks": [
+      { "id": "todo", "title": "To Do", "cards": [
         { "id": "PROJ-1", "title": "Implement MicroRX signals", "priority": "High", "user": "JD" },
         { "id": "PROJ-2", "title": "Draft Growth Playbook", "priority": "Medium", "user": "AM" }
       ]},
-      { "id": "in-progress", "title": "In Progress", "tasks": [
+      { "id": "in-progress", "title": "In Progress", "cards": [
         { "id": "PROJ-3", "title": "Ollama RAG Configuration", "priority": "High", "user": "SK" }
       ]},
-      { "id": "done", "title": "Done", "tasks": [] }
+      { "id": "done", "title": "Done", "cards": [] }
     ]
   }
 }

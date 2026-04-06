@@ -1,7 +1,7 @@
 import express from "express";
 import fs from "fs";
 import path from "path";
-import { renderPage, cleanupMRXState } from "microrx/ssr";
+import { renderPage, cleanupMRXSerialize } from "microrx/ssr";
 
 const app = express();
 const __dirname = path.resolve();
@@ -31,26 +31,26 @@ const boardData = JSON.parse(
 
 app.get("/board", (req, res) => {
   const page = renderPage("./dist/board/board.html", boardData, renderOpts);
-  console.log(page);
+  //console.log(page);
   res.send(page);
 });
 
 app.get("/signal", (req, res) => {
   const page = renderPage("./dist/signal/index.html", boardData, renderOpts);
 
-  console.log("Testing signaltest page rendering:");
-  console.log(page);
+  //console.log("Testing signaltest page rendering:");
+  //console.log(page);
   res.send(page);
 });
 
 const jiraData = JSON.parse(
-  fs.readFileSync("./dist/jira/data.json", "utf-8")
+  fs.readFileSync("./dist/board/data.json", "utf-8")
 );
 app.get("/jira", (req, res) => {
   const page = renderPage("./dist/jira/index.html", jiraData, renderOpts);
 
-  console.log("Testing jira page rendering:");
-  console.log(page);
+  //console.log("Testing jira page rendering:");
+  //console.log(page);
   res.send(page);
 });
 

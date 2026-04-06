@@ -5,7 +5,7 @@
     ✔ Done
   </span>
 
-  <ul class="tags flex flex-wrap gap-1 mt-2 pl-1" rx-for="tag in card.tags key by rownum">
+  <ul class="tags flex flex-wrap gap-1 mt-2 pl-1" rx-for="tag in card.tags key by description">
     <li class="list-none">
       <Tag class="block" rx:src="./src/board/Tag.rx.html"></Tag>
     </li>
