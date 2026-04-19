@@ -11,7 +11,7 @@
     "todo/todo.html"
   ],
   "assets": [
-    { "dist": [ "server.mjs", "node_modules/microrx/dist/csr/microrx.js", "node_modules/microrx/dist/csr/boot.js" ] },
+    { "dist": [ "server.mjs", "node_modules/microrx/dist/csr/microrx@0.2.js", "node_modules/microrx/dist/csr/app.js" ] },
     { "dist/data": [ "src/data/todos.json", "src/data/board.json" ] },
     { "dist/board": [ "src/board/data.json" ] },
     { "dist/jira": [ "src/jira/data.json" ] }
