@@ -26,7 +26,7 @@ document.getElementById("addBtn").onclick = () => {
 };
 
 document.body.addEventListener("click", ev => {
-  const id = ev.target.closest("[data-mrx-id]")?.dataset?.mrxId;
+  const id = ev.target.closest("[data-rx-id]")?.dataset?.rxId;
   if (!id) return;
   console.log("Microrx pipeline fired for:", id);
 });

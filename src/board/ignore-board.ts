@@ -1,5 +1,5 @@
 declare module 'microrx' {
-  interface MRXState {
+  interface RXState {
     user?: {
       id: string;
       name: string;

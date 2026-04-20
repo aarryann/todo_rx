@@ -1,5 +1,5 @@
 // microrx.state.d.ts
-export interface MRXState {
+export interface RXState {
   board: {
     title: string;
     columns: Column[];

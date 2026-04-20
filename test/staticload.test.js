@@ -8,7 +8,7 @@ describe('staticload feature', function(){
     const manifest = { pages: ['example-app/src/index.html'], outDir: 'example-app/dist', loadersFile: 'src/loaders/index.js' };
     await compilePage('example-app/src/index.html', manifest);
     const outIndex = await fs.readFile(path.join(manifest.outDir,'index.html'),'utf8');
-    assert.ok(outIndex.includes('id="todo-list"') || outIndex.includes('data-mrx-for'), 'index should contain todo-list placeholder');
+    assert.ok(outIndex.includes('id="todo-list"') || outIndex.includes('data-rx-for'), 'index should contain todo-list placeholder');
     const pipelines = await fs.readFile(path.join(manifest.outDir,'pipelines.js'),'utf8');
     assert.ok(pipelines.includes('window.__MICRORX_PIPELINES__'), 'pipelines should be generated');
   });
