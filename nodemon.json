@@ -1,9 +1,9 @@
 {
   "watch": [
-    "src",
+    "src/",
     "../microrx/dist"
   ],
-  "ext": "js,json",
+  "ext": "js,json,html",
   "exec": "pnpm dev",
   "legacyWatch": true
 }

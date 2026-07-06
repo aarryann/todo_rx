@@ -1,9 +1,13 @@
 <div class="card bg-white rounded-md p-3 m-3 shadow hover:shadow-lg transition-shadow duration-200 ease-in-out cursor-pointer transform hover:scale-[1.01]">
   <h3 class="font-semibold text-sm m-1" rx:text="card.title"></h3>
 
-  <span rx:if="card.completed" class="completed text-green-600 font-bold text-xs mb-2 block">
+  <span rx:if="card.completed === 'true'" class="completed text-green-600 font-bold text-xs mb-2 block">
     ✔ Done
   </span>
+  <div class="flex items-center text-gray-700 text-xs mb-2">
+    <span class="font-semibold m-1">Days Passed: </span><span rx:text="card.dayspassed + 1"></span>
+    <span class="font-semibold ml-auto">Watching: </span><span class="text-align-right" rx:text="card.watching * 2"></span>
+  </div>
 
   <ul class="tags flex flex-wrap gap-1 mt-2 pl-1" rx:for="tag in card.tags key by description">
     <li class="list-none">
