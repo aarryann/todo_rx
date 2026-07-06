@@ -7,6 +7,11 @@ export default defineConfig({
     presetAttributify(),
     presetIcons(),
   ],
+  theme: {
+    fontFamily: {
+      sans: 'Inter, system-ui, sans-serif',
+    },
+  },  
   content: {
     pipeline: {
       include: [

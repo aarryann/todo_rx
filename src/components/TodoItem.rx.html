@@ -1,5 +1,5 @@
 <div class="todo-item" data-text="{{text}}" data-id="{{id}}" data-done="{{done}}">
-  <span rx-text="text" rx-id="id"></span>
-  <small rx-if="done">(done)</small>
+  <span rx:text="text" rx:id="id"></span>
+  <small rx:if="done">(done)</small>
   <button rx:click="deleteItem($el)">Delete</button>
 </div>

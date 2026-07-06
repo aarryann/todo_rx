@@ -7,7 +7,7 @@ const app = express();
 const __dirname = path.resolve();
 const renderOpts = {
   outDir: "dist/state",
-  publicPath: "/__rx_state__"
+  publicPath: "/__mrx_state__"
 };
 
 const jsonData = {
@@ -54,7 +54,7 @@ app.get("/jira", (req, res) => {
   res.send(page);
 });
 
-app.use("/__rx_state__", (req, res, next) => {
+app.use("/__mrx_state__", (req, res, next) => {
   res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
   res.setHeader("Pragma", "no-cache");
   res.setHeader("Expires", "0");
@@ -63,7 +63,7 @@ app.use("/__rx_state__", (req, res, next) => {
 
 app.use(express.static(path.join(__dirname, "dist")));
 
-app.use("/__rx_state__", express.static("dist/state"));
+app.use("/__mrx_state__", express.static("dist/state"));
 
 app.listen(3000, () => {
   console.log("SSR running at http://localhost:3000/board");

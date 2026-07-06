@@ -1,8 +1,8 @@
-<section rx-for="column in board.columns key by id" class="flex-1 overflow-x-auto p-6 flex gap-6 custom-scrollbar" id="board-container">
+<section rx:for="column in board.columns key by id" class="flex-1 overflow-x-auto p-6 flex gap-6 custom-scrollbar" id="board-container">
   <div class="kanban-column flex flex-col h-full bg-[#EBECF0] rounded-lg p-3">
-    <h3 class="text-sm font-bold text-gray-600 mb-4 px-1 uppercase tracking-wider" rx-text="column.title"></h3>
-    <div class="space-y-3 flex-1 overflow-y-auto" rx-for="card in column.cards key by id">
-      <Card rx-src="./src/jira/Card.rx.html"></Card>
+    <h3 class="text-sm font-bold text-gray-600 mb-4 px-1 uppercase tracking-wider" rx:text="column.title"></h3>
+    <div class="space-y-3 flex-1 overflow-y-auto" rx:for="card in column.cards key by id">
+      <Card rx:component="./src/jira/Card.rx.html"></Card>
     </div>
   </div>
 </section>

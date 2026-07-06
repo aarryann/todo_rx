@@ -4,10 +4,10 @@
     <h1>Boards</h1>
 
     <ul>
-      <li rx-for="board in boards">
+      <li rx:for="board in boards">
         <h2 class="test">{{board.name}}</h2>
 
-        <span rx-if="board.archived" class="archived">
+        <span rx:if="board.archived" class="archived">
           (archived)
         </span>
       </li>

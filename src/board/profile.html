@@ -3,12 +3,12 @@
   <body>
     <h1>User Profile</h1>
 
-    <div rx-if="user.isAdmin">
+    <div rx:if="user.isAdmin">
       <strong>Admin User</strong>
     </div>
 
     <ul>
-      <li rx-for="activity in user.activities">
+      <li rx:for="activity in user.activities">
         {{activity}}
       </li>
     </ul>

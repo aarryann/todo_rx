@@ -8,18 +8,18 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     [un-cloak] { display: none; }
-    .kanban-column { min-width: 320px; max-width: 320px; }
+    .kanban-column { min-width: 300px; max-width: 300px; }
     .custom-scrollbar::-webkit-scrollbar { width: 6px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
   </style>
 </head>
 <body class="bg-[#F4F5F7] font-sans text-[#172B4D] h-screen overflow-hidden flex" un-cloak>
 
-  <Sidebar rx-src="./src/jira/Sidebar.rx.html"></Sidebar>
+  <Sidebar rx:component="./src/jira/Sidebar.rx.html"></Sidebar>
 
-  <Main rx-src="./src/jira/Main.rx.html"></Main>
+  <Main rx:component="./src/jira/Main.rx.html"></Main>
 
-  <PropertyPane rx-src="./src/jira/PropertyPane.rx.html"></PropertyPane>
+  <PropertyPane rx:component="./src/jira/PropertyPane.rx.html"></PropertyPane>
 
   <script>
     function openPane(id, title) {
