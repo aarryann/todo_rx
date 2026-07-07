@@ -8,7 +8,7 @@
     "rx:build": "node node_modules/microrx/dist/ast/cli.js",
     "uno:build": "unocss 'src/**/*.{html,rx,js,ts}' -c ./uno.config.ts -o dist/uno.css",
     "build": "pnpm rx:build && pnpm uno:build",
-    "serve": "node ./dist/server.mjs",
+    "serve": "cd dist && node ./server.mjs",
     "dev": "pnpm build && pnpm serve",
     "start": "nodemon",
     "signaltest:build": "node build.mjs && pnpm serve"

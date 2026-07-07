@@ -26,17 +26,18 @@ const jsonData = {
   }
 };
 const boardData = JSON.parse(
-  fs.readFileSync("./dist/board/data.json", "utf-8")
+  fs.readFileSync("./board/data.json", "utf-8")
 );
 
 app.get("/board", (req, res) => {
-  const page = renderPage("./dist/board/board.html", boardData, renderOpts);
+
+  const page = renderPage("./board/board.html", boardData, { ...renderOpts, req, res });
   //console.log(page);
   res.send(page);
 });
 
 app.get("/signal", (req, res) => {
-  const page = renderPage("./dist/signal/index.html", boardData, renderOpts);
+  const page = renderPage("./signal/index.html", boardData, { ...renderOpts, req, res });
 
   //console.log("Testing signaltest page rendering:");
   //console.log(page);
@@ -44,10 +45,10 @@ app.get("/signal", (req, res) => {
 });
 
 const jiraData = JSON.parse(
-  fs.readFileSync("./dist/board/data.json", "utf-8")
+  fs.readFileSync("./board/data.json", "utf-8")
 );
 app.get("/jira", (req, res) => {
-  const page = renderPage("./dist/jira/index.html", jiraData, renderOpts);
+  const page = renderPage("./jira/index.html", jiraData, { ...renderOpts, req, res });
 
   //console.log("Testing jira page rendering:");
   //console.log(page);
@@ -61,7 +62,7 @@ app.use("/__mrx_state__", (req, res, next) => {
   next();
 });
 
-app.use(express.static(path.join(__dirname, "dist")));
+app.use(express.static(__dirname));
 
 app.use("/__mrx_state__", express.static("dist/state"));
 
