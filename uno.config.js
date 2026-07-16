@@ -1,17 +1,30 @@
-import { defineConfig, presetAttributify, presetIcons } from 'unocss'
-import presetWind3 from '@unocss/preset-wind3'
+import { defineConfig, presetUno, presetAttributify, presetIcons, presetWind4, presetTypography } from 'unocss'
 
 export default defineConfig({
   presets: [
-    presetWind3(),         // replaces presetUno
+    presetWind4(),
     presetAttributify(),
     presetIcons(),
+    presetTypography({
+      cssExtend: {
+        // Adjust standard body size and line-height
+        'p, ul, ol, pre': {
+          'font-size': '1rem', // E.g., matches prose-lg
+          'line-height': '1.75',
+        },
+        // Force headings to scale proportionally
+        h1: {
+          'font-size': '1.5rem',
+          'font-weight': '700',
+          'line-height': '2rem',
+        },
+        h2: {
+          'font-size': '1.25rem',
+          'line-height': '1.75',
+        },
+      },
+    }),
   ],
-  theme: {
-    fontFamily: {
-      sans: 'Inter, system-ui, sans-serif',
-    },
-  },  
   content: {
     pipeline: {
       include: [
