@@ -3,7 +3,7 @@
     "title": "Project Alpha",
     "columns": [
       { "id": "col-001", "title": "Todo", "cards": [
-          { "id": "card-001", "title": "Task 1", "priority": "High", "user": "JD", "dayspassed": 31 , "watching": 21 , "telling": 10 , "completed": "false", "tags": [ { "description" : "frontend" }, { "description" : "ui" }, { "description" : "urgent" } ] },
+          { "id": "card-001", "title": "Task 1", "priority": "High", "user": "JD", "dayspassed": 31 , "watching": 21 , "telling": 10 , "completed": "true", "tags": [ { "description" : "frontend" }, { "description" : "ui" }, { "description" : "urgent" } ] },
           { "id": "card-002", "title": "Task 2", "priority": "Medium", "user": "AM", "dayspassed": 31 , "watching": 21 , "telling": 10 , "completed": "true",  "tags": [ { "description" : "backend" }, { "description": "api" }, { "description" : "high-priority" } ] },
           { "id": "card-003", "title": "Task 3", "priority": "Medium", "user": "SK", "dayspassed": 31 , "watching": 21 , "telling": 10 , "completed": "false", "tags": [ { "description" : "frontend" }, { "description" : "ui" }, { "description" : "low-priority" } ] },
           { "id": "card-004", "title": "Task 4", "priority": "High", "user": "SK", "dayspassed": 31 , "watching": 21 , "telling": 10 , "completed": "true", "tags": [ { "description" : "backend" }, { "description": "integration" }, { "description" : "urgent" } ] },
