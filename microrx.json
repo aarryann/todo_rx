@@ -15,10 +15,13 @@
     { "dist/jira": [ "src/jira/data.json" ] }
   ],
   "outDir": "dist",
-  "srcDir": "src",
+  "pagesDir": "src",
   "staticLoaders": {
     "loadTodos": "./src/data/todos.json"
   },
+  "sharedComponentPaths":[
+    "./src/components"
+  ],
   "components": {
     "board_board_html": {
       "Board": "./src/board/Board.rx.html",
