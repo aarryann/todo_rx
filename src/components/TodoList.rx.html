@@ -4,7 +4,7 @@
 
   <ul>
     <li rx:for="todo in todos key by todo.id">
-      <TodoItem rx:text="todo.title" rx:id="{'id_'}todo.id" rx:done="todo.done"  rx:component="src/components/todoItem.rx.html"/>
+      <TodoItem rx:text="todo.title" rx:id="{'id_'}todo.id" rx:done="todo.done"  use="./todoItem.rx.html"/>
     </li>
   </ul>
 

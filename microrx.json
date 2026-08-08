@@ -1,9 +1,6 @@
 {
   "pages": [
-    "protocol/index.html",
-    "board/board.html",
-    "signal",
-    "jira/index.html"
+    "board/board.html"
   ],
   "ignore": [
     "index.html",
