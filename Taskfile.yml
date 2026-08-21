@@ -1,0 +1,83 @@
+version: "3"
+
+tasks:
+
+  # --------------------------------------------------
+  # Build
+  # --------------------------------------------------
+
+  build:
+    desc: Build Microrx
+    cmds:
+      - npm run build
+
+
+  # --------------------------------------------------
+  # Tests
+  # --------------------------------------------------
+
+  test:unit:
+    desc: Run unit tests
+    cmds:
+      - npx vitest run tests/unit
+
+
+  test:integration:
+    desc: Run integration tests
+    cmds:
+      - npx vitest run tests/integration
+
+
+  test:e2e:
+    desc: Run end-to-end tests
+    cmds:
+      - npx vitest run tests/e2e
+
+
+  # --------------------------------------------------
+  # Fast gate
+  #
+  # Used by pre-commit
+  # --------------------------------------------------
+
+  gate:
+    desc: Run fast pre-commit regression checks
+    cmds:
+      - task: build
+      - task: test:unit
+      - task: test:integration
+
+
+  # --------------------------------------------------
+  # Full verification
+  #
+  # Used by pre-push
+  # --------------------------------------------------
+
+  verify:
+    desc: Run complete pre-push verification
+    cmds:
+      - task: gate
+      - task: test:e2e
+
+
+  # --------------------------------------------------
+  # Development
+  # --------------------------------------------------
+
+  test:watch:
+    desc: Run tests in watch mode
+    cmds:
+      - npx vitest
+
+
+  test:unit:watch:
+    desc: Run unit tests in watch mode
+    cmds:
+      - npx vitest tests/unit
+
+
+  test:integration:watch:
+    desc: Run integration tests in watch mode
+    cmds:
+      - npx vitest tests/integration
