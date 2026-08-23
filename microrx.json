@@ -1,18 +1,21 @@
 {
   "pages": [
-    "board/board.html"
+    "board/board.html",
+    "marketplace/index.html"
   ],
   "ignore": [
     "index.html",
     "board/index.html",
     "board/profile.html",
-    "todo/todo.html"
+    "todo/todo.html",
+    "board/ignore-index.html",
+    "jira/ignore_index1.html"
   ],
   "assets": [
-    { "dist": [ "server.mjs", "node_modules/microrx/dist/csr/microrx@0.2.js", "node_modules/microrx/dist/csr/app.js" ] },
-    { "dist/data": [ "src/data/todos.json", "src/data/board.json" ] },
-    { "dist/board": [ "src/board/data.json" ] },
-    { "dist/jira": [ "src/jira/data.json" ] }
+    { ".": [ "server.mjs", "node_modules/microrx/dist/csr/microrx@0.2.js", "node_modules/microrx/dist/csr/app.js" ] },
+    { "data": [ "src/data/todos.json", "src/data/board.json" ] },
+    { "board": [ "src/board/data.json" ] },
+    { "jira": [ "src/jira/data.json" ] }
   ],
   "outDir": "dist",
   "pagesDir": "src",

@@ -1,0 +1,356 @@
+{
+  "101": [
+    {
+      "elementId": 101,
+      "templateId": 0,
+      "bindings": [
+        {
+          "type": "text",
+          "template": {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "board"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "title"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "102": [
+    {
+      "elementId": 102,
+      "templateId": 0,
+      "bindings": [
+        {
+          "type": "list",
+          "src": "board.columns",
+          "tpl": 1,
+          "item": "column",
+          "key": "id"
+        }
+      ]
+    }
+  ],
+  "103": [
+    {
+      "elementId": 103,
+      "templateId": 1,
+      "bindings": [
+        {
+          "type": "scope",
+          "template": {
+            "type": "SequenceExpression",
+            "expressions": [
+              {
+                "type": "AssignmentExpression",
+                "operator": "=",
+                "left": {
+                  "type": "Identifier",
+                  "name": "level"
+                },
+                "right": {
+                  "type": "Literal",
+                  "value": 1
+                }
+              },
+              {
+                "type": "AssignmentExpression",
+                "operator": "=",
+                "left": {
+                  "type": "Identifier",
+                  "name": "expanded"
+                },
+                "right": {
+                  "type": "Literal",
+                  "value": false
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "104": [
+    {
+      "elementId": 104,
+      "templateId": 1,
+      "bindings": [
+        {
+          "type": "text",
+          "template": {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "column"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "title"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "105": [
+    {
+      "elementId": 105,
+      "templateId": 1,
+      "bindings": [
+        {
+          "type": "list",
+          "src": "column.cards",
+          "tpl": 2,
+          "item": "card",
+          "key": "id"
+        }
+      ]
+    }
+  ],
+  "106": [
+    {
+      "elementId": 106,
+      "templateId": 2,
+      "bindings": [
+        {
+          "type": "scope",
+          "template": {
+            "type": "SequenceExpression",
+            "expressions": [
+              {
+                "type": "AssignmentExpression",
+                "operator": "=",
+                "left": {
+                  "type": "Identifier",
+                  "name": "level"
+                },
+                "right": {
+                  "type": "Literal",
+                  "value": 2
+                }
+              },
+              {
+                "type": "AssignmentExpression",
+                "operator": "=",
+                "left": {
+                  "type": "Identifier",
+                  "name": "watching"
+                },
+                "right": {
+                  "type": "MemberExpression",
+                  "object": {
+                    "type": "Identifier",
+                    "name": "card"
+                  },
+                  "property": {
+                    "type": "Identifier",
+                    "name": "watching"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "107": [
+    {
+      "elementId": 107,
+      "templateId": 2,
+      "bindings": [
+        {
+          "type": "text",
+          "template": {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "card"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "title"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "108": [
+    {
+      "elementId": 108,
+      "templateId": 2,
+      "bindings": [
+        {
+          "type": "if",
+          "template": {
+            "type": "BinaryExpression",
+            "operator": "===",
+            "left": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "Identifier",
+                "name": "card"
+              },
+              "property": {
+                "type": "Identifier",
+                "name": "completed"
+              }
+            },
+            "right": {
+              "type": "Literal",
+              "value": "true"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "109": [
+    {
+      "elementId": 109,
+      "templateId": 2,
+      "bindings": [
+        {
+          "type": "text",
+          "template": {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "card"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "dayspassed"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "110": [
+    {
+      "elementId": 110,
+      "templateId": 2,
+      "bindings": [
+        {
+          "type": "text",
+          "template": {
+            "type": "BinaryExpression",
+            "operator": "*",
+            "left": {
+              "type": "MemberExpression",
+              "object": {
+                "type": "Identifier",
+                "name": "card"
+              },
+              "property": {
+                "type": "Identifier",
+                "name": "watching"
+              }
+            },
+            "right": {
+              "type": "Literal",
+              "value": 2
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "111": [
+    {
+      "elementId": 111,
+      "templateId": 2,
+      "bindings": [
+        {
+          "type": "attr",
+          "attr": "onClick",
+          "template": {
+            "type": "CallExpression",
+            "callee": {
+              "type": "Identifier",
+              "name": "watcher"
+            },
+            "arguments": [
+              {
+                "type": "MemberExpression",
+                "object": {
+                  "type": "Identifier",
+                  "name": "card"
+                },
+                "property": {
+                  "type": "Identifier",
+                  "name": "watching"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "112": [
+    {
+      "elementId": 112,
+      "templateId": 2,
+      "bindings": [
+        {
+          "type": "list",
+          "src": "card.tags",
+          "tpl": 3,
+          "item": "tag",
+          "key": "description"
+        }
+      ]
+    }
+  ],
+  "113": [
+    {
+      "elementId": 113,
+      "templateId": 3,
+      "bindings": [
+        {
+          "type": "text",
+          "template": {
+            "type": "MemberExpression",
+            "object": {
+              "type": "Identifier",
+              "name": "tag"
+            },
+            "property": {
+              "type": "Identifier",
+              "name": "description"
+            }
+          }
+        },
+        {
+          "type": "scope",
+          "template": {
+            "type": "SequenceExpression",
+            "expressions": [
+              {
+                "type": "AssignmentExpression",
+                "operator": "=",
+                "left": {
+                  "type": "Identifier",
+                  "name": "level"
+                },
+                "right": {
+                  "type": "Literal",
+                  "value": 3
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

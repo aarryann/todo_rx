@@ -36,6 +36,13 @@ app.get("/board", (req, res) => {
   res.send(page);
 });
 
+app.get("/marketplace", (req, res) => {
+
+  const page = renderPage("./marketplace/index.html", boardData, { ...renderOpts, req, res });
+  //console.log(page);
+  res.send(page);
+});
+
 app.get("/signal", (req, res) => {
   const page = renderPage("./signal/index.html", boardData, { ...renderOpts, req, res });
 

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VCF Enterprise Marketplace - Interactive</title>
+  
+  <!-- UnoCSS Runtime Engine & Icon Presets -->
+  <script src="https://cdn.jsdelivr.net/npm/@unocss/runtime"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@unocss/reset/tailwind.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/i/lucide.css" />
+
+  <style>
+    /* Dynamic Theme Base Styles */
+    :root {
+      --bg-main: #f4f4f5;
+      --bg-header: rgba(255, 255, 255, 0.9);
+      --bg-card: #ffffff;
+      --border-color: #e4e4e7;
+      --text-main: #18181b;
+      --text-muted: #71717a;
+    }
+    html.dark {
+      --bg-main: #09090b;
+      --bg-header: rgba(24, 24, 27, 0.9);
+      --bg-card: rgba(24, 24, 27, 0.6);
+      --border-color: #27272a;
+      --text-main: #f4f4f5;
+      --text-muted: #a1a1aa;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-main); }
+    ::-webkit-scrollbar-thumb { background: #52525b; border-radius: 3px; }
+  </style>
+</head>
+
+<body class="font-sans min-h-screen flex flex-col antialiased">
+
+  <!-- ==================== TOP NAVIGATION BAR ==================== -->
+  <header class="sticky top-0 z-40 border-b border-zinc-200 dark:border-zinc-800 px-6 py-3.5 flex items-center justify-between" style="background-color: var(--bg-header);">
+    <div class="flex items-center gap-8">
+      <a href="#" class="flex items-center gap-3 decoration-none">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-rose-600 to-orange-500 flex items-center justify-center shadow-lg shadow-rose-900/20">
+          <span class="i-lucide-layers text-xl text-white"></span>
+        </div>
+        <div>
+          <span class="text-base font-bold tracking-tight text-zinc-900 dark:text-white block leading-tight">VCF Catalog</span>
+          <span class="text-xs text-zinc-500 dark:text-zinc-400 block leading-tight">Solutions &amp; Ecosystem</span>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+        <a href="#" class="px-3 py-1.5 rounded-md bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-white decoration-none">Solutions</a>
+        <a href="#" class="px-3 py-1.5 rounded-md text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition decoration-none">Services</a>
+        <a href="#" class="px-3 py-1.5 rounded-md text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition decoration-none">Documentation</a>
+      </nav>
+    </div>
+
+    <!-- Actions & Theme Toggle -->
+    <div class="flex items-center gap-3">
+      <!-- Theme Switcher -->
+      <button id="themeToggle" class="p-2 rounded-lg bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-300 dark:hover:bg-zinc-700 transition">
+        <span id="themeIcon" class="i-lucide-sun text-base block dark:i-lucide-moon"></span>
+      </button>
+
+      <button class="bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold px-4 py-2 rounded-md transition shadow-md shadow-rose-900/20 flex items-center gap-2">
+        <span class="i-lucide-user text-sm"></span>
+        <span>Sign In</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ==================== HERO SEARCH BANNER ==================== -->
+  <section class="bg-gradient-to-b from-zinc-200/50 dark:from-zinc-900/80 to-transparent border-b border-zinc-200 dark:border-zinc-800/80 px-6 py-10">
+    <div class="max-w-7xl mx-auto text-center">
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white mb-3">
+        Explore Validated Cloud Solutions
+      </h1>
+      <p class="text-zinc-600 dark:text-zinc-400 text-sm max-w-2xl mx-auto mb-8">
+        Discover ready-to-deploy enterprise services, partner integrations, automation packs, and architectural blueprints.
+      </p>
+
+      <!-- Global Live Search Bar -->
+      <div class="max-w-3xl mx-auto relative">
+        <div class="relative flex items-center">
+          <span class="i-lucide-search text-zinc-400 text-lg absolute left-4 pointer-events-none"></span>
+          <input 
+            type="text" 
+            id="searchInput"
+            placeholder="Search solutions, integrations, broadcom packs, or keywords..." 
+            class="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-xl py-3.5 pl-12 pr-12 text-sm text-zinc-900 dark:text-white placeholder-zinc-500 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition shadow-xl"
+          />
+          <button id="clearSearch" class="hidden absolute right-4 text-zinc-400 hover:text-zinc-600 dark:hover:text-white text-sm">
+            <span class="i-lucide-x text-base block"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== MAIN CONTENT LAYOUT ==================== -->
+  <div class="flex-1 max-w-7xl w-full mx-auto px-6 py-8 flex gap-8">
+
+    <!-- SIDEBAR FILTERS -->
+    <aside class="w-64 shrink-0 hidden lg:block">
+      <div class="sticky top-24 space-y-6">
+        
+        <!-- Filter Header -->
+        <div class="flex items-center justify-between pb-4 border-b border-zinc-200 dark:border-zinc-800">
+          <div class="flex items-center gap-2">
+            <span class="i-lucide-sliders-horizontal text-rose-500 text-sm"></span>
+            <h2 class="text-sm font-bold text-zinc-900 dark:text-white uppercase tracking-wider">Filters</h2>
+          </div>
+          <button id="resetFilters" class="text-xs text-rose-600 dark:text-rose-400 hover:underline transition bg-transparent border-none cursor-pointer">
+            Reset all
+          </button>
+        </div>
+
+        <!-- Filter Group: Category -->
+        <div class="space-y-3">
+          <div class="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">Category</div>
+          <div class="space-y-2 text-sm text-zinc-600 dark:text-zinc-400" id="categoryFilters">
+            <label class="flex items-center gap-2.5 cursor-pointer hover:text-zinc-900 dark:hover:text-white transition">
+              <input type="checkbox" value="Disaster Recovery" class="filter-cb accent-rose-500 rounded border-zinc-300 dark:border-zinc-700" />
+              <span>Disaster Recovery</span>
+            </label>
+            <label class="flex items-center gap-2.5 cursor-pointer hover:text-zinc-900 dark:hover:text-white transition">
+              <input type="checkbox" value="Observability" class="filter-cb accent-rose-500 rounded border-zinc-300 dark:border-zinc-700" />
+              <span>Observability</span>
+            </label>
+            <label class="flex items-center gap-2.5 cursor-pointer hover:text-zinc-900 dark:hover:text-white transition">
+              <input type="checkbox" value="Developer Platform" class="filter-cb accent-rose-500 rounded border-zinc-300 dark:border-zinc-700" />
+              <span>Developer Platform</span>
+            </label>
+            <label class="flex items-center gap-2.5 cursor-pointer hover:text-zinc-900 dark:hover:text-white transition">
+              <input type="checkbox" value="Security" class="filter-cb accent-rose-500 rounded border-zinc-300 dark:border-zinc-700" />
+              <span>Security</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Filter Group: Publisher -->
+        <div class="space-y-3 pt-4 border-t border-zinc-200 dark:border-zinc-800">
+          <div class="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">Publisher</div>
+          <div class="space-y-2 text-sm text-zinc-600 dark:text-zinc-400" id="publisherFilters">
+            <label class="flex items-center gap-2.5 cursor-pointer hover:text-zinc-900 dark:hover:text-white transition">
+              <input type="checkbox" value="Broadcom" class="filter-cb accent-rose-500 rounded border-zinc-300 dark:border-zinc-700" />
+              <span>Broadcom First-Party</span>
+            </label>
+            <label class="flex items-center gap-2.5 cursor-pointer hover:text-zinc-900 dark:hover:text-white transition">
+              <input type="checkbox" value="Partner" class="filter-cb accent-rose-500 rounded border-zinc-300 dark:border-zinc-700" />
+              <span>Technology Alliance</span>
+            </label>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- MAIN CATALOG CONTENT -->
+    <main class="flex-1">
+      
+      <!-- Toolbar -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-zinc-200 dark:border-zinc-800">
+        <div>
+          <h2 class="text-lg font-bold text-zinc-900 dark:text-white">Catalog Offerings</h2>
+          <p class="text-xs text-zinc-500 dark:text-zinc-400">
+            Showing <span id="resultCount" class="font-bold text-rose-600 dark:text-rose-400">0</span> solutions
+          </p>
+        </div>
+
+        <!-- Sort Control -->
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-zinc-500 dark:text-zinc-400">Sort by:</span>
+          <select id="sortSelect" class="bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-zinc-800 dark:text-zinc-200 focus:outline-none">
+            <option value="name-asc">Name (A to Z)</option>
+            <option value="name-desc">Name (Z to A)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- CARD GRID CONTAINER -->
+      <div id="catalogGrid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- Dynamic JS Injected Cards -->
+      </div>
+
+      <!-- EMPTY STATE -->
+      <div id="emptyState" class="hidden text-center py-16 bg-zinc-100 dark:bg-zinc-900/40 rounded-2xl border border-dashed border-zinc-300 dark:border-zinc-800">
+        <span class="i-lucide-box-select text-4xl text-zinc-400 mb-3 block mx-auto"></span>
+        <h3 class="text-base font-bold text-zinc-800 dark:text-zinc-200 mb-1">No solutions found</h3>
+        <p class="text-xs text-zinc-500 dark:text-zinc-400 max-w-sm mx-auto mb-4">No services match your active search and filter constraints.</p>
+        <button id="clearAllBtn" class="bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold px-4 py-2 rounded-lg transition">Clear All Filters</button>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ==================== JAVASCRIPT STATE ENGINE ==================== -->
+  <script>
+    // --- SAMPLE MARKETPLACE CATALOG DATA ---
+    const catalogData = [
+      {
+        id: "srm",
+        title: "VCF Site Recovery Manager",
+        publisher: "Broadcom",
+        category: "Disaster Recovery",
+        version: "v8.9.0",
+        vcfCompat: "VCF 5.2",
+        validated: true,
+        icon: "i-lucide-shield-check text-rose-500 bg-rose-500/10 border-rose-500/20",
+        description: "Automated orchestration for disaster recovery testing, failover, and migration across multi-site SDDCs."
+      },
+      {
+        id: "aria-logs",
+        title: "Aria Operations for Logs",
+        publisher: "Broadcom",
+        category: "Observability",
+        version: "v8.14.2",
+        vcfCompat: "VCF 5.1+",
+        validated: true,
+        icon: "i-lucide-cpu text-blue-400 bg-blue-500/10 border-blue-500/20",
+        description: "Real-time log management, intuitive dashboards, and deep operational analytics across VCF environments."
+      },
+      {
+        id: "tanzu-plugin",
+        title: "Tanzu Application Service Plugin",
+        publisher: "Partner",
+        category: "Developer Platform",
+        version: "v3.2.0",
+        vcfCompat: "VCF 5.0+",
+        validated: false,
+        icon: "i-lucide-boxes text-purple-400 bg-purple-500/10 border-purple-500/20",
+        description: "Accelerates cloud-native developer pipelines with enterprise policy enforcement and automated Kubernetes provisioning."
+      },
+      {
+        id: "nsx-zt",
+        title: "NSX Zero-Trust Security Module",
+        publisher: "Broadcom",
+        category: "Security",
+        version: "v4.1.1",
+        vcfCompat: "VCF 5.2",
+        validated: true,
+        icon: "i-lucide-lock text-orange-400 bg-orange-500/10 border-orange-500/20",
+        description: "Advanced micro-segmentation, distributed firewalling, and threat intelligence for VMware Cloud Foundation."
+      },
+      {
+        id: "hcx",
+        title: "VCF Cloud Mobility (HCX)",
+        publisher: "Broadcom",
+        category: "Disaster Recovery",
+        version: "v4.9.0",
+        vcfCompat: "VCF 5.1",
+        validated: true,
+        icon: "i-lucide-arrow-left-right text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
+        description: "Seamless workload migration and rebalancing across multi-cloud and hybrid VCF deployments."
+      },
+      {
+        id: "dynatrace",
+        title: "Dynatrace Observability Connector",
+        publisher: "Partner",
+        category: "Observability",
+        version: "v2.1.0",
+        vcfCompat: "VCF 5.2",
+        validated: false,
+        icon: "i-lucide-activity text-teal-400 bg-teal-500/10 border-teal-500/20",
+        description: "AI-powered observability connector integrating enterprise telemetry directly into Dynatrace SaaS."
+      }
+    ];
+
+    // --- STATE MANAGEMENT ---
+    let searchQuery = "";
+    let activeCategories = new Set();
+    let activePublishers = new Set();
+    let currentSort = "name-asc";
+
+    // --- DOM ELEMENTS ---
+    const catalogGrid = document.getElementById("catalogGrid");
+    const emptyState = document.getElementById("emptyState");
+    const resultCount = document.getElementById("resultCount");
+    const searchInput = document.getElementById("searchInput");
+    const clearSearch = document.getElementById("clearSearch");
+    const sortSelect = document.getElementById("sortSelect");
+    const resetFiltersBtn = document.getElementById("resetFilters");
+    const clearAllBtn = document.getElementById("clearAllBtn");
+    const themeToggle = document.getElementById("themeToggle");
+
+    // --- RENDER FUNCTION ---
+    function renderCatalog() {
+      let filtered = catalogData.filter(item => {
+        // Search Filter
+        const matchesSearch = searchQuery === "" || 
+          item.title.toLowerCase().includes(searchQuery) ||
+          item.description.toLowerCase().includes(searchQuery) ||
+          item.category.toLowerCase().includes(searchQuery);
+
+        // Category Filter
+        const matchesCategory = activeCategories.size === 0 || activeCategories.has(item.category);
+
+        // Publisher Filter
+        const matchesPublisher = activePublishers.size === 0 || activePublishers.has(item.publisher);
+
+        return matchesSearch && matchesCategory && matchesPublisher;
+      });
+
+      // Sorting
+      filtered.sort((a, b) => {
+        if (currentSort === "name-asc") return a.title.localeCompare(b.title);
+        if (currentSort === "name-desc") return b.title.localeCompare(a.title);
+        return 0;
+      });
+
+      // Update Result Counter
+      resultCount.textContent = filtered.length;
+
+      // Render Cards
+      if (filtered.length === 0) {
+        catalogGrid.innerHTML = "";
+        emptyState.classList.remove("hidden");
+      } else {
+        emptyState.classList.add("hidden");
+        catalogGrid.innerHTML = filtered.map(item => `
+          <div class="bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800/80 hover:border-zinc-300 dark:hover:border-zinc-700 rounded-xl p-5 flex flex-col justify-between transition group hover:shadow-2xl hover:shadow-rose-950/10">
+            <div>
+              <div class="flex items-start justify-between gap-3 mb-4">
+                <div class="w-12 h-12 rounded-xl border flex items-center justify-center shrink-0 ${item.icon}">
+                  <span class="${item.icon.split(' ')[0]} text-2xl"></span>
+                </div>
+                ${item.validated ? `
+                  <span class="px-2.5 py-1 rounded-full text-[11px] font-medium bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Validated
+                  </span>
+                ` : `
+                  <span class="px-2.5 py-1 rounded-full text-[11px] font-medium bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center gap-1">
+                    Partner Pack
+                  </span>
+                `}
+              </div>
+              <h3 class="text-base font-bold text-zinc-900 dark:text-white group-hover:text-rose-600 dark:group-hover:text-rose-400 transition mb-1">
+                ${item.title}
+              </h3>
+              <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4 line-clamp-2">
+                ${item.description}
+              </p>
+            </div>
+
+            <div>
+              <div class="flex flex-wrap items-center gap-1.5 mb-4">
+                <span class="text-[10px] bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 px-2 py-0.5 rounded border border-zinc-200 dark:border-zinc-700/50">${item.category}</span>
+                <span class="text-[10px] bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 px-2 py-0.5 rounded border border-zinc-200 dark:border-zinc-700/50">${item.vcfCompat}</span>
+              </div>
+              <div class="pt-3 border-t border-zinc-100 dark:border-zinc-800/60 flex items-center justify-between">
+                <span class="text-xs text-zinc-400">${item.version}</span>
+                <a href="#" class="text-xs font-semibold text-rose-600 dark:text-rose-400 hover:underline flex items-center gap-1 decoration-none">
+                  View Details <span class="i-lucide-arrow-right text-xs"></span>
+                </a>
+              </div>
+            </div>
+          </div>
+        `).join("");
+      }
+    }
+
+    // --- EVENT LISTENERS ---
+    searchInput.addEventListener("input", (e) => {
+      searchQuery = e.target.value.toLowerCase().trim();
+      clearSearch.classList.toggle("hidden", searchQuery === "");
+      renderCatalog();
+    });
+
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      searchQuery = "";
+      clearSearch.classList.add("hidden");
+      renderCatalog();
+    });
+
+    document.querySelectorAll(".filter-cb").forEach(cb => {
+      cb.addEventListener("change", (e) => {
+        const val = e.target.value;
+        const parent = e.target.closest("#categoryFilters, #publisherFilters").id;
+        
+        if (parent === "categoryFilters") {
+          e.target.checked ? activeCategories.add(val) : activeCategories.delete(val);
+        } else {
+          e.target.checked ? activePublishers.add(val) : activePublishers.delete(val);
+        }
+        renderCatalog();
+      });
+    });
+
+    sortSelect.addEventListener("change", (e) => {
+      currentSort = e.target.value;
+      renderCatalog();
+    });
+
+    function resetAllState() {
+      searchQuery = "";
+      searchInput.value = "";
+      clearSearch.classList.add("hidden");
+      activeCategories.clear();
+      activePublishers.clear();
+      document.querySelectorAll(".filter-cb").forEach(cb => cb.checked = false);
+      renderCatalog();
+    }
+
+    resetFiltersBtn.addEventListener("click", resetAllState);
+    clearAllBtn.addEventListener("click", resetAllState);
+
+    // Dark/Light Theme Switcher
+    themeToggle.addEventListener("click", () => {
+      document.documentElement.classList.toggle("dark");
+    });
+
+    // --- INITIAL RENDER ---
+    renderCatalog();
+  </script>
+</body>
+</html>
