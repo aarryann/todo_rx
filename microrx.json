@@ -1,8 +1,6 @@
 {
-  "pages": [
-    "board/board.html",
-    "marketplace/index.html"
-  ],
+  "pagesDir": "src",
+  "outDir": "dist",
   "ignore": [
     "index.html",
     "board/index.html",
@@ -17,8 +15,6 @@
     { "board": [ "src/board/data.json" ] },
     { "jira": [ "src/jira/data.json" ] }
   ],
-  "outDir": "dist",
-  "pagesDir": "src",
   "staticLoaders": {
     "loadTodos": "./src/data/todos.json"
   },

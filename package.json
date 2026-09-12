@@ -10,8 +10,7 @@
     "build": "pnpm rx:build && pnpm uno:build",
     "serve": "cd dist && node ./server.mjs",
     "dev": "pnpm build && pnpm serve",
-    "start": "nodemon",
-    "signaltest:build": "node build.mjs && pnpm serve"
+    "start": "nodemon"
   },
   "keywords": [],
   "author": "",
