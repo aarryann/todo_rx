@@ -71,7 +71,7 @@ app.use("/__mrx_state__", (req, res, next) => {
 
 app.use(express.static(__dirname));
 
-app.use("/__mrx_state__", express.static("dist/state"));
+app.use("/__mrx_state__", express.static("state"));
 
 app.listen(3000, () => {
   console.log("SSR running at http://localhost:3000/board");

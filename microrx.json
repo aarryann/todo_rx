@@ -12,7 +12,7 @@
     "jira/ignore_index1.html"
   ],
   "assets": [
-    { ".": [ "server.mjs", "node_modules/microrx/dist/csr/microrx@0.2.js", "node_modules/microrx/dist/csr/app.js" ] },
+    { ".": [ "server.mjs", "node_modules/microrx/dist/csr/microrx@0.3.js", "node_modules/microrx/dist/csr/app.js" ] },
     { "data": [ "src/data/todos.json", "src/data/board.json" ] },
     { "board": [ "src/board/data.json" ] },
     { "jira": [ "src/jira/data.json" ] }
