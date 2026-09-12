@@ -20,23 +20,5 @@
   },
   "sharedComponentPaths":[
     "./src/components"
-  ],
-  "components": {
-    "board_board_html": {
-      "Board": "./src/board/Board.rx.html",
-      "Column": "./src/board/Column.rx.html",
-      "Card": "./src/board/Card.rx.html",
-      "Tag": "./src/board/Tag.rx.html"
-    },
-    "jira_html": {
-      "Sidebar": "./src/jira/Sidebar.rx.html",
-      "Main": "./src/jira/Main.rx.html",
-      "Header": "./src/jira/Header.rx.html",
-      "PropertyPane": "./src/jira/PropertyPane.rx.html"
-    },
-    "todo_todo_html": {
-      "TodoList": "./src/components/TodoList.rx.html",
-      "TodoItem": "./src/components/TodoItem.rx.html"
-    }
-  }
+  ]
 }
