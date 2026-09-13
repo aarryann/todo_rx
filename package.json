@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "rx:build": "microrx",
+    "rx:build": "microrx --clean",
     "uno:build": "unocss 'src/**/*.{html,rx,js,ts}' -c ./uno.config.ts -o dist/uno.css",
     "build": "pnpm rx:build && pnpm uno:build",
     "serve": "cd dist && node ./server.mjs",
