@@ -16,7 +16,6 @@
   },
   "ignore": [
     "index.html",
-    "board/index.html",
     "board/profile.html",
     "todo/todo.html",
     "board/ignore-index.html",
@@ -26,7 +25,7 @@
     { ".": [ "node_modules/microrx/dist/csr/microrx@0.3.js", "node_modules/microrx/dist/csr/app.js" ] },
     { "data": [ "src/data/todos.json", "src/data/board.json" ] },
     { "board": [ "src/board/data.json" ] },
-    { "jira": [ "src/jira/data.json" ] }
+    { "jira": [ "src/board/data.json" ] }
   ],
   "sharedComponentPaths":[
     "./src/components"
