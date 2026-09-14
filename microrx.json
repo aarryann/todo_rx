@@ -1,6 +1,19 @@
 {
-  "pagesDir": "src",
   "outDir": "dist",
+  "pagesDir": "src",
+  "route": {
+    "manifest": "pages.json"
+  },
+  "state": {
+    "outDir": "state",
+    "publicPath": "/__mrx_state__"
+  },
+  "server": {
+    "port": 3000,
+    "host": "localhost",
+    "adapter": "express",
+    "manifest": "server.json"
+  },
   "ignore": [
     "index.html",
     "board/index.html",
@@ -10,14 +23,11 @@
     "jira/ignore_index1.html"
   ],
   "assets": [
-    { ".": [ "server.mjs", "node_modules/microrx/dist/csr/microrx@0.3.js", "node_modules/microrx/dist/csr/app.js" ] },
+    { ".": [ "node_modules/microrx/dist/csr/microrx@0.3.js", "node_modules/microrx/dist/csr/app.js" ] },
     { "data": [ "src/data/todos.json", "src/data/board.json" ] },
     { "board": [ "src/board/data.json" ] },
     { "jira": [ "src/jira/data.json" ] }
   ],
-  "staticLoaders": {
-    "loadTodos": "./src/data/todos.json"
-  },
   "sharedComponentPaths":[
     "./src/components"
   ]
