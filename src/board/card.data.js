@@ -1,7 +1,7 @@
-// card.code.js
+// card.data.js
 
 export default {
-  schemas: {
+  schema: {
     card: {
       id: "string",
       title: "string",
@@ -9,6 +9,7 @@ export default {
       dayspassed: "number",
       watching: "number",
       tags: [tag]
-    }
+    },
+    tag: {}
   }
 };

@@ -1,11 +1,12 @@
-// board.code.js
+// board.data.js
 
 export default {
-  schemas: {
+  schema: {
     board: {
       id: "string",
       title: "string",
       columns: [column]
-    }
+    },
+    column: {}
   },
 };

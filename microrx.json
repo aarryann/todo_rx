@@ -18,7 +18,6 @@
     "index.html",
     "board/profile.html",
     "todo/todo.html",
-    "board/ignore-index.html",
     "jira/ignore_index1.html"
   ],
   "assets": [

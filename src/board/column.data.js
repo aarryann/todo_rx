@@ -1,11 +1,12 @@
-// column.code.js
+// column.data.js
 
 export default {
-  schemas: {
+  schema: {
     column: {
       id: "string",
       title: "string",
       cards: [card]
-    }
+    },
+    card: {}
   },
 };

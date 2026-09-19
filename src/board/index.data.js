@@ -1,22 +1,18 @@
-// index.code.js
+// index.data.js
 
 export default {
-  datasets: {
-    board: {
-      schema: {
-        id: "string",
-        title: "string",
-      },
-
-      ssr: async () => {
-        return tmp;
-      },
-
-      load: async ({ request }) => {
-        return getBoard(request);
-      },
-
+  defaultDataset: {
+    schema: {
     },
+
+    ssr: async () => {
+      return tmp;
+    },
+
+    load: async ({ request }) => {
+      return getBoard(request);
+    },
+
   },
 };
 

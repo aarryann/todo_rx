@@ -1,7 +1,7 @@
-// tag.code.js
+// tag.data.js
 
 export default {
-  schemas: {
+  schema: {
     tag: {
       description: "string"
     }
