@@ -7,6 +7,8 @@ export default {
       title: "string",
       columns: [column]
     },
-    column: {}
+    column: {
+      id: "string"
+    }
   },
 };

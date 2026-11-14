@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "files": {
+    "src/board/tag.data.js": {
+      "schemas": {
+        "tag": {
+          "kind": "object",
+          "fields": {
+            "description": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "src/board/test.data.js": {
+      "schemas": {
+        "board": {
+          "kind": "object",
+          "fields": {
+            "count": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
